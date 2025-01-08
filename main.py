@@ -1,6 +1,10 @@
 def load_todos():
 	with open('todos.txt', 'r') as file:
-		return [line.strip().split('|') for line in file.readlines()]
+		todos = []
+		for line in file.readlines():
+			task_data = line.strip().split('|')
+			todos.append(task_data)
+		return todos
 
 def save_todos(todos):
 	with open('todos.txt', 'w') as file:
@@ -12,8 +16,11 @@ def show_todos(todos):
 		print("No tasks found!")
 		return
 	print("\nYour TODO List:")
-	for i, todo in enumerate(todos, 1):
-		status = "✓" if todo[1] == "completed" else " "
+	for i, todo in enumerate(todos):
+		if todo[1] == "completed":
+			status = "✓"
+		else:
+			status = " "
 		print(f"{i}. [{status}] {todo[0]}")
 
 def add_todo(todos):
@@ -27,7 +34,10 @@ def change_state(todos):
 	if not todos:
 		return
 	index = int(input("Enter task number to toggle status: ")) - 1
-	todos[index][1] = "completed" if todos[index][1] == "pending" else "pending"
+	if todos[index][1] == "pending":
+		todos[index][1] = "completed"
+	else:
+		todos[index][1] = "pending"
 	save_todos(todos)
 	print("Task status updated!")
 
